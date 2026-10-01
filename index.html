@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Placeboard: IT and SIWES placements in every field</title>
+<style>
+  :root{
+    --paper:#F3F1EA;
+    --ink:#1B2A26;
+    --muted:#5C6B66;
+    --line:#CFCBBE;
+    --brine:#14504A;
+    --flare:#D9531E;
+    --sand:#E6E0CF;
+    --ok:#1E7A4F;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;font-size:16px}
+  a{color:var(--brine)}
+  :focus-visible{outline:3px solid var(--flare);outline-offset:2px}
+  .wrap{max-width:860px;margin:0 auto;padding:0 18px}
+  header.top{padding:22px 0 8px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .brand{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:.2px}
+  .btn{font:inherit;font-weight:600;border:2px solid var(--brine);background:var(--brine);color:#fff;padding:9px 16px;border-radius:6px;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--brine)}
+  .btn:hover{filter:brightness(1.1)}
+  h1{font-family:var(--serif);font-size:clamp(30px,6.5vw,48px);line-height:1.1;margin:26px 0 12px;max-width:16em}
+  .lede{color:var(--muted);max-width:34em;margin:0 0 24px}
+
+  /* core sample: the type filter */
+  .core{display:flex;height:54px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;margin:0 0 6px}
+  .seg{flex:1 1 0;min-width:0;border:0;border-right:2px solid var(--ink);cursor:pointer;font:inherit;font-size:13px;font-weight:600;color:var(--ink);padding:4px 6px;text-align:left;display:flex;flex-direction:column;justify-content:center;transition:flex-grow .35s}
+  .seg:last-child{border-right:0}
+  .seg small{font-weight:500;color:inherit;opacity:.8}
+  .seg[aria-pressed="true"]{outline:3px solid var(--flare);outline-offset:-3px}
+  .seg.all{background:var(--paper)}
+  .seg.t0{background:#C9D8CF}
+  .seg.t1{background:#E9C9A8}
+  .seg.t2{background:#D9D2B8}
+  .seg.t3{background:#B9C6C9}
+  .core-note{font-size:13px;color:var(--muted);margin:0 0 20px}
+
+  .filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+  .filters .search{grid-column:1/-1}
+  label.f{display:flex;flex-direction:column;font-size:13px;color:var(--muted);gap:4px}
+  input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:6px;padding:9px 10px;width:100%}
+  .count{margin:18px 0 8px;font-size:14px;color:var(--muted)}
+
+  .notice{background:var(--sand);border-left:5px solid var(--flare);padding:10px 14px;border-radius:4px;font-size:14px;margin:0 0 18px}
+
+  ul.list{list-style:none;margin:0;padding:0}
+  .job{background:#fff;border:1.5px solid var(--line);border-left:6px solid var(--brine);border-radius:6px;padding:14px 16px;margin-bottom:12px}
+  .job.t1{border-left-color:var(--flare)}
+  .job.t2{border-left-color:#A89B5E}
+  .job.t3{border-left-color:#5F8A94}
+  .job h2{font-family:var(--serif);font-size:19px;margin:0 0 2px}
+  .co{color:var(--muted);font-size:14px;margin:0 0 8px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+  .tag{font-size:12.5px;background:var(--paper);border:1px solid var(--line);border-radius:99px;padding:2px 10px}
+  .tag.v{background:#DDF0E4;border-color:#A7D4B9;color:var(--ok);font-weight:600}
+  .tag.u{background:#FBE9DF;border-color:#EFC4AD;color:#9A3A12}
+  .meta{font-size:14px;margin:0 0 10px}
+  .meta b{font-weight:600}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .link{background:none;border:0;color:var(--brine);font:inherit;text-decoration:underline;cursor:pointer;padding:0}
+  .reviews{margin:10px 0 0;padding:10px 12px;background:var(--paper);border-radius:6px;font-size:14px}
+  .reviews p{margin:0 0 6px}
+  .reviews p:last-child{margin:0}
+  .empty{padding:28px 16px;text-align:center;background:#fff;border:1.5px dashed var(--line);border-radius:6px}
+
+  footer{margin:36px 0 40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
+
+  dialog{border:2px solid var(--ink);border-radius:8px;padding:0;width:min(520px,94vw);background:var(--paper);color:var(--ink)}
+  dialog::backdrop{background:rgba(27,42,38,.55)}
+  .dlg{padding:18px}
+  .dlg h3{font-family:var(--serif);margin:0 0 4px;font-size:22px}
+  .dlg .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+  .dlg .full{grid-column:1/-1}
+  .err{color:#9A3A12;font-size:14px;min-height:20px;margin:0}
+
+  @media (max-width:520px){
+    .filters{grid-template-columns:1fr}
+    .seg{font-size:11.5px;padding:4px}
+    .dlg .grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Placeboard</div>
+    <a class="btn ghost" id="suggest" href="#" hidden target="_blank" rel="noopener" style="text-decoration:none">Suggest a listing</a>
+  </header>
+
+  <main>
+    <h1>Industrial training placements you can trust</h1>
+    <p class="lede">SIWES and IT placements, internships and graduate roles in every field: engineering, tech, science, business, health and more. Each listing is marked verified or unverified, with feedback from students who went before you.</p>
+
+    <div class="notice" id="status" hidden></div>
+
+    <div class="core" id="core" role="group" aria-label="Filter by type"></div>
+    <p class="core-note">Tap a layer to filter by type. Tap it again to clear.</p>
+
+    <div class="filters">
+      <label class="f search">Search
+        <input id="q" type="search" placeholder="Company, role or keyword">
+      </label>
+      <label class="f">Field
+        <select id="disc"></select>
+      </label>
+      <label class="f">Location
+        <select id="loc"></select>
+      </label>
+      <label class="f">Show
+        <select id="ver">
+          <option value="all">All listings</option>
+          <option value="v">Verified only</option>
+        </select>
+      </label>
+      <label class="f">Sort by
+        <select id="sort">
+          <option value="deadline">Closing soonest</option>
+          <option value="new">Newest</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="count" id="count" aria-live="polite"></div>
+    <ul class="list" id="list"></ul>
+  </main>
+
+  <footer>
+    Verified means the listing was confirmed with the company or its official site. Always check an offer yourself, and never pay money to get a placement.
+  </footer>
+</div>
+
+
+<script>
+/* ============ SETUP: only these two lines need your links ============
+   SHEET_CSV_URL: your Google Sheet, published to the web as CSV.
+                  Every change you make in the sheet shows on the site.
+   SUGGEST_URL:   optional Google Form link so students can suggest a
+                  listing to you. Leave "" to hide the button.            */
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShO1YPCn9sdOljVCHLXxbNOj4-OR3e6URMBsyeSiAoFk9Rhr6ActftDL4mI_lithYTptg8R6gUfz6W/pub?output=csv";
+const SUGGEST_URL = "";
+
+const TYPES = ["SIWES / IT","Internship","Graduate trainee","Job"];
+const D = n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+
+/* Sample listings, shown only while SHEET_CSV_URL is empty */
+const SAMPLES = [
+  {title:"SIWES Placement, Network Support",company:"Sample Tech Solutions",loc:"Lagos",type:"SIWES / IT",disc:"Computer Science",pay:"Paid",deadline:D(18),added:D(-3),verified:true,apply:"#",reviews:["Hands-on work from week one. Log book was signed on time."]},
+  {title:"SIWES Placement, Site Engineering",company:"Sample Construction Ltd",loc:"Abuja",type:"SIWES / IT",disc:"Civil Engineering",pay:"Unpaid",deadline:D(30),added:D(-8),verified:true,apply:"#",reviews:["Unpaid, but real site exposure.","Placement letter was issued without delay."]},
+  {title:"IT Placement, Lab Assistant",company:"Sample Diagnostics Centre",loc:"Owerri",type:"SIWES / IT",disc:"Medical Lab Science",pay:"Not stated",deadline:D(25),added:D(-5),verified:false,apply:"#",reviews:[]},
+  {title:"Software Development Intern",company:"Sample Software Ltd",loc:"Remote",type:"Internship",disc:"Computer Science",pay:"Paid",deadline:D(45),added:D(-1),verified:true,apply:"#",reviews:["Good mentors and real projects."]},
+  {title:"IT Placement, Accounts Unit",company:"Sample Finance Plc",loc:"Port Harcourt",type:"SIWES / IT",disc:"Accounting",pay:"Paid",deadline:D(12),added:D(-10),verified:false,apply:"#",reviews:[]},
+  {title:"Graduate Trainee, Process Engineering",company:"Sample Manufacturing Ltd",loc:"Lagos",type:"Graduate trainee",disc:"Chemical Engineering",pay:"Paid",deadline:D(60),added:D(-2),verified:true,apply:"#",reviews:[]}
+];
+
+let listings = [];
+const $ = id => document.getElementById(id);
+const state = {type:null,q:"",disc:"All",loc:"All",ver:"all",sort:"deadline",open:new Set()};
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---- read the Google Sheet ---- */
+function parseCSV(text){
+  const rows=[];let row=[],cell="",q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){
+      if(c==='"'){ if(text[i+1]==='"'){cell+='"';i++} else q=false }
+      else cell+=c;
+    } else if(c==='"') q=true;
+    else if(c===","){row.push(cell);cell=""}
+    else if(c==="\n"||c==="\r"){ if(c==="\r"&&text[i+1]==="\n")i++; row.push(cell);rows.push(row);row=[];cell="" }
+    else cell+=c;
+  }
+  if(cell!==""||row.length){row.push(cell);rows.push(row)}
+  return rows;
+}
+function normDate(v){
+  v=(v||"").trim(); if(!v) return "";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  const d=new Date(v); return isNaN(d)?"":iso(d);
+}
+function fromSheet(text){
+  const rows=parseCSV(text).filter(r=>r.some(c=>c.trim()));
+  if(rows.length<2) return [];
+  const head=rows[0].map(h=>h.trim().toLowerCase());
+  const col=n=>head.indexOf(n);
+  const g=(r,n)=>{const i=col(n);return i<0?"":(r[i]||"").trim()};
+  return rows.slice(1).map((r,i)=>({
+    title:g(r,"title"),company:g(r,"company"),loc:g(r,"location")||"Nigeria",
+    type:TYPES.find(t=>t.toLowerCase()===g(r,"type").toLowerCase())||"Job",
+    disc:g(r,"discipline")||g(r,"field")||"Other",pay:g(r,"pay")||"Not stated",
+    deadline:normDate(g(r,"deadline")),added:normDate(g(r,"added"))||("0000-"+String(9999-i)),
+    verified:/^(yes|y|true|verified)$/i.test(g(r,"verified")),
+    apply:g(r,"apply"),reviews:g(r,"reviews").split("|").map(x=>x.trim()).filter(Boolean)
+  })).filter(l=>l.title&&l.company);
+}
+
+function daysLeft(dateStr){
+  if(!dateStr) return null;
+  const t=new Date(); t.setHours(0,0,0,0);
+  return Math.round((new Date(dateStr+"T00:00:00")-t)/86400000);
+}
+
+function buildOptions(){
+  const discs=["All",...new Set(listings.map(l=>l.disc))];
+  const locs=["All",...new Set(listings.map(l=>l.loc))];
+  const fill=(el,arr,cur,label)=>{
+    el.innerHTML=arr.map(v=>`<option value="${esc(v)}">${v==="All"?"Any "+label:esc(v)}</option>`).join("");
+    el.value=arr.includes(cur)?cur:"All";
+  };
+  fill($("disc"),discs,state.disc,"field");
+  fill($("loc"),locs,state.loc,"location");
+}
+
+function buildCore(){
+  const total=listings.length;
+  const counts=TYPES.map(t=>listings.filter(l=>l.type===t).length);
+  let html=`<button class="seg all" style="flex-grow:1.2" data-type="" aria-pressed="${state.type===null}">All<small>${total}</small></button>`;
+  TYPES.forEach((t,i)=>{
+    html+=`<button class="seg t${i}" style="flex-grow:${Math.max(counts[i],1)}" data-type="${esc(t)}" aria-pressed="${state.type===t}">${esc(t)}<small>${counts[i]}</small></button>`;
+  });
+  $("core").innerHTML=html;
+  $("core").querySelectorAll(".seg").forEach(b=>b.onclick=()=>{
+    const v=b.dataset.type||null;
+    state.type=(state.type===v)?null:v;
+    render();
+  });
+}
+
+function filtered(){
+  const q=state.q.trim().toLowerCase();
+  let r=listings.filter(l=>{
+    if(state.type && l.type!==state.type) return false;
+    if(state.disc!=="All" && l.disc!==state.disc) return false;
+    if(state.loc!=="All" && l.loc!==state.loc) return false;
+    if(state.ver==="v" && !l.verified) return false;
+    if(q && !(l.title+" "+l.company+" "+l.loc+" "+l.disc).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  r.sort((a,b)=> state.sort==="new" ? b.added.localeCompare(a.added) : (a.deadline||"9999").localeCompare(b.deadline||"9999"));
+  return r;
+}
+
+function card(l,idx){
+  const ti=TYPES.indexOf(l.type);
+  const dl=daysLeft(l.deadline);
+  const closing = dl===null ? "Open until filled" : dl===0 ? "Closes today" : dl===1 ? "Closes tomorrow" : `Closes in ${dl} days`;
+  const open=state.open.has(idx+l.title);
+  const rv=l.reviews.length;
+  const a=l.apply;
+  const href = /^https?:\/\//i.test(a) ? a : (/@/.test(a) ? "mailto:"+a : "");
+  return `<li class="job t${ti}">
+    <h2>${esc(l.title)}</h2>
+    <p class="co">${esc(l.company)}</p>
+    <div class="tags">
+      <span class="tag ${l.verified?"v":"u"}">${l.verified?"Verified":"Not yet verified"}</span>
+      <span class="tag">${esc(l.type)}</span>
+      <span class="tag">${esc(l.disc)}</span>
+      <span class="tag">${esc(l.loc)}</span>
+      <span class="tag">${esc(l.pay)}</span>
+    </div>
+    <p class="meta"><b>${closing}</b>${l.deadline?" ("+esc(l.deadline)+")":""}</p>
+    <div class="row">
+      ${href?`<a class="btn" href="${esc(href)}" target="_blank" rel="noopener">How to apply</a>`:`<span class="tag">Apply details coming soon</span>`}
+      ${rv?`<button class="link" data-rv="${esc(idx+l.title)}" aria-expanded="${open}">${open?"Hide":"Read"} ${rv} student review${rv>1?"s":""}</button>`:`<span style="font-size:14px;color:var(--muted)">No student reviews yet</span>`}
+    </div>
+    ${open&&rv?`<div class="reviews">${l.reviews.map(r=>`<p>${esc(r)}</p>`).join("")}</div>`:""}
+  </li>`;
+}
+
+function render(){
+  buildCore();
+  const r=filtered();
+  $("count").textContent = `${r.length} listing${r.length===1?"":"s"}`;
+  $("list").innerHTML = r.length ? r.map((l,i)=>card(l,i)).join("") :
+    `<li class="empty">No listings match these filters. Clear a filter or check back soon.</li>`;
+  $("list").querySelectorAll("[data-rv]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.rv; state.open.has(k)?state.open.delete(k):state.open.add(k); render();
+  });
+}
+
+$("q").oninput=e=>{state.q=e.target.value;render()};
+$("disc").onchange=e=>{state.disc=e.target.value;render()};
+$("loc").onchange=e=>{state.loc=e.target.value;render()};
+$("ver").onchange=e=>{state.ver=e.target.value;render()};
+$("sort").onchange=e=>{state.sort=e.target.value;render()};
+
+if(SUGGEST_URL){$("suggest").href=SUGGEST_URL;$("suggest").hidden=false}
+
+function status(msg){$("status").textContent=msg;$("status").hidden=!msg}
+function show(list){
+  /* hide listings whose closing date has passed */
+  listings=list.filter(l=>{const d=daysLeft(l.deadline);return d===null||d>=0});
+  buildOptions();render();
+}
+
+async function start(){
+  if(!SHEET_CSV_URL){
+    status("These are sample listings. Connect your Google Sheet (see SHEET_CSV_URL in the file) to show real ones.");
+    show(SAMPLES);return;
+  }
+  try{
+    const res=await fetch(SHEET_CSV_URL,{cache:"no-store"});
+    if(!res.ok) throw new Error(res.status);
+    show(fromSheet(await res.text()));
+  }catch(e){
+    status("Listings could not load right now. Please refresh in a moment.");
+    show([]);
+  }
+}
+start();
+</script>
+</body>
+</html>
